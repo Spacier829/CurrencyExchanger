@@ -9,9 +9,9 @@ CREATE TABLE IF NOT EXISTS currencies
 CREATE TABLE IF NOT EXISTS exchange_rates
 (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
-    base_currency_id   INTEGER FOREIGN KEY REFERENCES currencies,
-    target_currency_id INTEGER FOREIGN KEY REFERENCES currencies,
-    rate               DECIMAL(6) NOT NULL,
+    base_currency_id   INTEGER REFERENCES currencies (id) NOT NULL,
+    target_currency_id INTEGER REFERENCES currencies (id) NOT NULL,
+    rate               DECIMAL(6)                         NOT NULL,
     CONSTRAINT unique_currencies_id UNIQUE (base_currency_id, target_currency_id),
     CONSTRAINT not_equal_currencies CHECK ( base_currency_id != target_currency_id)
     );
