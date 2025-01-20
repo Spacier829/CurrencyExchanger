@@ -1,7 +1,7 @@
 package entity;
 
 public class Currency {
-  private int id;
+  private Long id;
   private String code;
   private String fullName;
   private String sign;
@@ -9,18 +9,18 @@ public class Currency {
   public Currency() {
   }
 
-  public Currency(int id, String code, String fullName, String sign) {
+  public Currency(long id, String code, String fullName, String sign) {
     this.id = id;
     this.code = code;
     this.fullName = fullName;
     this.sign = sign;
   }
 
-  public int getId() {
+  public long getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(long id) {
     this.id = id;
   }
 
