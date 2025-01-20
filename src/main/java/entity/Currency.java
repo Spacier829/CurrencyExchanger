@@ -9,18 +9,18 @@ public class Currency {
   public Currency() {
   }
 
-  public Currency(long id, String code, String fullName, String sign) {
+  public Currency(Long id, String code, String fullName, String sign) {
     this.id = id;
     this.code = code;
     this.fullName = fullName;
     this.sign = sign;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
