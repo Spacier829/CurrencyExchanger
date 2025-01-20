@@ -7,8 +7,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DataBaseConnectionPool {
-  private static HikariConfig config = new HikariConfig();
-  private static HikariDataSource dataSource;
+  private static final HikariConfig config = new HikariConfig();
+  private static final HikariDataSource dataSource;
 
   static {
     config.setJdbcUrl("jdbc:sqlite::resource:currency_exchanger.db");
