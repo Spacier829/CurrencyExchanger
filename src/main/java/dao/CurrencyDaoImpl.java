@@ -15,7 +15,7 @@ import java.util.Optional;
 public class CurrencyDaoImpl implements CurrencyDao {
   private static final String FIND_ALL_SQL = "SELECT * FROM currencies";
   private static final String FIND_BY_CODE_SQL = "SELECT * FROM currencies WHERE code = ?";
-  private static final String ADD_SQL = "INSERT INTO currencies (code, full_name, sign) VALUES (?, ?, ?) RETURNING *";
+  private static final String ADD_SQL = "INSERT INTO currencies (code, full_name, sign) VALUES (?,?,?) RETURNING *";
 
   @Override
   public List<Currency> findAll() {
@@ -49,7 +49,24 @@ public class CurrencyDaoImpl implements CurrencyDao {
 
   @Override
   public Currency add(Currency entity) {
-    return null;
+    try (Connection connection = DataBaseConnectionPool.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(ADD_SQL)) {
+      preparedStatement.setString(1, entity.getCode());
+      preparedStatement.setString(2, entity.getFullName());
+      preparedStatement.setString(3, entity.getSign());
+      ResultSet resultSet = preparedStatement.executeQuery();
+      return getCurrency(resultSet);
+    } catch (SQLException exception) {
+      String exceptionMessage = exception.getMessage();
+      if (exceptionMessage.contains("[SQLITE_CONSTRAINT_UNIQUE]")) {
+        if (exceptionMessage.contains("full_name")) {
+          throw new DaoException("Failed to add currency. Full name:" + entity.getFullName() + " already exists.");
+        } else if (exceptionMessage.contains("code")) {
+          throw new DaoException("Failed to add currency. Code:" + entity.getCode() + " already exists.");
+        }
+      }
+      throw new DaoException("Failed to add currency by code:" + entity.getCode() + ".");
+    }
   }
 
   private Currency getCurrency(ResultSet resultSet) throws SQLException {
