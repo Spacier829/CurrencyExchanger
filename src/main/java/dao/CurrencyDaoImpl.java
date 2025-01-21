@@ -13,9 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class CurrencyDaoImpl implements CurrencyDao {
-  private static final String FIND_ALL_SQL = "SELECT * FROM currencies";
-  private static final String FIND_BY_CODE_SQL = "SELECT * FROM currencies WHERE code = ?";
-  private static final String ADD_SQL = "INSERT INTO currencies (code, full_name, sign) VALUES (?,?,?) RETURNING *";
+  private static final String FIND_ALL_SQL = "SELECT id, code, full_name, sign " +
+                                             "FROM currencies";
+  private static final String FIND_BY_CODE_SQL = "SELECT id, code, full_name, sign " +
+                                                 "FROM currencies WHERE code = ?";
+  private static final String ADD_SQL = "INSERT INTO currencies (code, full_name, sign) VALUES (?,?,?) " +
+                                        "RETURNING id, code, full_name, sign";
 
   @Override
   public List<Currency> findAll() {
@@ -55,6 +58,9 @@ public class CurrencyDaoImpl implements CurrencyDao {
       preparedStatement.setString(2, entity.getFullName());
       preparedStatement.setString(3, entity.getSign());
       ResultSet resultSet = preparedStatement.executeQuery();
+      if (!resultSet.next()) {
+        throw new DaoException("Failed to add currency.");
+      }
       return buildCurrency(resultSet);
     } catch (SQLException exception) {
       String exceptionMessage = exception.getMessage();
@@ -71,7 +77,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
 
   private Currency buildCurrency(ResultSet resultSet) throws SQLException {
     return new Currency(
-        resultSet.getInt("id"),
+        resultSet.getLong("id"),
         resultSet.getString("code"),
         resultSet.getString("full_name"),
         resultSet.getString("sign")
