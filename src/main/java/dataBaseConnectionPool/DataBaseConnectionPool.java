@@ -13,6 +13,7 @@ public class DataBaseConnectionPool {
   static {
     config.setJdbcUrl("jdbc:sqlite::resource:currency_exchanger.db");
     config.setDriverClassName("org.sqlite.JDBC");
+    config.setConnectionInitSql("PRAGMA foreign_keys = ON");
     dataSource = new HikariDataSource(config);
   }
 
