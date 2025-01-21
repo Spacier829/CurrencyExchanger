@@ -24,7 +24,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
          PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
       ResultSet resultSet = preparedStatement.executeQuery();
       while (resultSet.next()) {
-        currencies.add(getCurrency(resultSet));
+        currencies.add(buildCurrency(resultSet));
       }
     } catch (SQLException e) {
       throw new DaoException("Failed to find all Currencies.");
@@ -39,7 +39,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
       preparedStatement.setString(1, code);
       ResultSet resultSet = preparedStatement.executeQuery();
       if (resultSet.next()) {
-        return Optional.of(getCurrency(resultSet));
+        return Optional.of(buildCurrency(resultSet));
       }
     } catch (SQLException e) {
       throw new DaoException("Failed to find Currency by code: " + code + ".");
@@ -55,7 +55,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
       preparedStatement.setString(2, entity.getFullName());
       preparedStatement.setString(3, entity.getSign());
       ResultSet resultSet = preparedStatement.executeQuery();
-      return getCurrency(resultSet);
+      return buildCurrency(resultSet);
     } catch (SQLException exception) {
       String exceptionMessage = exception.getMessage();
       if (exceptionMessage.contains("[SQLITE_CONSTRAINT_UNIQUE]")) {
@@ -69,7 +69,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
     }
   }
 
-  private Currency getCurrency(ResultSet resultSet) throws SQLException {
+  private Currency buildCurrency(ResultSet resultSet) throws SQLException {
     return new Currency(
         resultSet.getInt("id"),
         resultSet.getString("code"),
