@@ -1,6 +1,6 @@
 package dao;
 
-import dataBaseConnectionPool.DataBaseConnectionPool;
+import util.DataBaseConnectionPool;
 import entity.Currency;
 import exception.DaoException;
 

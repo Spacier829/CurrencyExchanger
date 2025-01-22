@@ -1,4 +1,4 @@
-package dataBaseConnectionPool;
+package util;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
