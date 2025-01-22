@@ -1,15 +1,15 @@
 package entity;
 
-public class Currency {
+public class CurrencyEntity{
   private Long id;
   private String code;
   private String fullName;
   private String sign;
 
-  public Currency() {
+  public CurrencyEntity() {
   }
 
-  public Currency(Long id, String code, String fullName, String sign) {
+  public CurrencyEntity(Long id, String code, String fullName, String sign) {
     this.id = id;
     this.code = code;
     this.fullName = fullName;

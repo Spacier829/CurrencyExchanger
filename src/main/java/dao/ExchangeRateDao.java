@@ -1,11 +1,11 @@
 package dao;
 
-import entity.ExchangeRate;
+import entity.ExchangeRateEntity;
 
 import java.util.Optional;
 
-public interface ExchangeRateDao extends Dao<ExchangeRate> {
-  Optional<ExchangeRate> findByCodes(String baseCode, String targetCode);
+public interface ExchangeRateDao extends Dao<ExchangeRateEntity> {
+  Optional<ExchangeRateEntity> findByCodes(String baseCode, String targetCode);
 
-  Optional<ExchangeRate> update(ExchangeRate exchangeRate);
+  Optional<ExchangeRateEntity> update(ExchangeRateEntity exchangeRate);
 }

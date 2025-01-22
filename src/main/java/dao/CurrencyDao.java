@@ -1,9 +1,9 @@
 package dao;
 
-import entity.Currency;
+import entity.CurrencyEntity;
 
 import java.util.Optional;
 
-public interface CurrencyDao extends Dao<Currency> {
-  Optional<Currency> findByCode(String code);
+public interface CurrencyDao extends Dao<CurrencyEntity> {
+  Optional<CurrencyEntity> findByCode(String code);
 }

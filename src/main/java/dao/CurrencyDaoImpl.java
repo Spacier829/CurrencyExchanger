@@ -1,7 +1,7 @@
 package dao;
 
 import util.DataBaseConnectionPool;
-import entity.Currency;
+import entity.CurrencyEntity;
 import exception.DaoException;
 
 import java.sql.Connection;
@@ -25,8 +25,8 @@ public class CurrencyDaoImpl implements CurrencyDao {
   }
 
   @Override
-  public List<Currency> findAll() {
-    List<Currency> currencies = new ArrayList<>();
+  public List<CurrencyEntity> findAll() {
+    List<CurrencyEntity> currencies = new ArrayList<>();
     try (Connection connection = DataBaseConnectionPool.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
       ResultSet resultSet = preparedStatement.executeQuery();
@@ -40,7 +40,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
   }
 
   @Override
-  public Optional<Currency> findByCode(String code) {
+  public Optional<CurrencyEntity> findByCode(String code) {
     try (Connection connection = DataBaseConnectionPool.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_CODE_SQL)) {
       preparedStatement.setString(1, code);
@@ -55,7 +55,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
   }
 
   @Override
-  public Currency add(Currency entity) {
+  public CurrencyEntity add(CurrencyEntity entity) {
     try (Connection connection = DataBaseConnectionPool.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(ADD_SQL)) {
       preparedStatement.setString(1, entity.getCode());
@@ -83,8 +83,8 @@ public class CurrencyDaoImpl implements CurrencyDao {
     return INSTANCE;
   }
 
-  private Currency buildCurrency(ResultSet resultSet) throws SQLException {
-    return new Currency(
+  private CurrencyEntity buildCurrency(ResultSet resultSet) throws SQLException {
+    return new CurrencyEntity(
         resultSet.getLong("id"),
         resultSet.getString("code"),
         resultSet.getString("full_name"),

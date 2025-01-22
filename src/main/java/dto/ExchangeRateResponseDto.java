@@ -2,17 +2,17 @@ package dto;
 
 import java.math.BigDecimal;
 
-public class ExchangeResponseDto {
+public class ExchangeRateResponseDto {
   private Long id;
   private CurrencyResponseDto baseCurrency;
   private CurrencyResponseDto targetCurrency;
   private BigDecimal rate;
 
-  public ExchangeResponseDto() {
+  public ExchangeRateResponseDto() {
   }
 
-  public ExchangeResponseDto(Long id, CurrencyResponseDto baseCurrency, CurrencyResponseDto targetCurrency,
-                             BigDecimal rate) {
+  public ExchangeRateResponseDto(Long id, CurrencyResponseDto baseCurrency, CurrencyResponseDto targetCurrency,
+                                 BigDecimal rate) {
     this.id = id;
     this.baseCurrency = baseCurrency;
     this.targetCurrency = targetCurrency;
