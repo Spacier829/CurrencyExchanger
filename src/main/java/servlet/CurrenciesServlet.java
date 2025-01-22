@@ -17,7 +17,6 @@ import java.util.List;
 @WebServlet("/currencies")
 public class CurrenciesServlet extends HttpServlet {
   private final CurrenciesService currenciesService = CurrenciesService.getInstance();
-  private final CurrencyDaoImpl currencyDao = CurrencyDaoImpl.getInstance();
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override

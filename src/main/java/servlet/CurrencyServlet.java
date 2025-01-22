@@ -31,10 +31,10 @@ public class CurrencyServlet extends HttpServlet {
       if (!pathInfo.matches("^/[a-z]{3}$")) {
         throw new InvalidParameterException("Invalid code");
       }
-      String code = pathInfo.substring(1);
+      String code = pathInfo.substring(1).toUpperCase();
       Optional<CurrencyResponseDto> currency = currenciesService.findByCode(code);
       if (currency.isPresent()) {
-        objectMapper.writeValue(resp.getWriter(), currency);
+        objectMapper.writeValue(resp.getWriter(), currency.get());
       } else {
         throw new DaoException("Currency not found");
       }
