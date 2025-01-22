@@ -1,4 +1,4 @@
-package service;
+package dto;
 
 public class CurrencyResponseDto {
   private Long id;
