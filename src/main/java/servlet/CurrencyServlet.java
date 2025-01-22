@@ -10,9 +10,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrenciesService;
+import util.InvalidParameterException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet("/currency/*")
 public class CurrencyServlet extends HttpServlet {
@@ -22,11 +24,20 @@ public class CurrencyServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    resp.setContentType("application/json");
+    resp.setCharacterEncoding("UTF-8");
     try {
-      List<CurrencyResponseDto> currencies = currenciesService.findAll();
-      resp.setContentType("application/json");
-      resp.setCharacterEncoding("UTF-8");
-      objectMapper.writeValue(resp.getWriter(), currencies);
+      String pathInfo = req.getPathInfo();
+      if (!pathInfo.matches("^/[a-z]{3}$")) {
+        throw new InvalidParameterException("Invalid code");
+      }
+      String code = pathInfo.substring(1);
+      Optional<CurrencyResponseDto> currency = currenciesService.findByCode(code);
+      if (currency.isPresent()) {
+        objectMapper.writeValue(resp.getWriter(), currency);
+      } else {
+        throw new DaoException("Currency not found");
+      }
     } catch (DaoException exception) {
       objectMapper.writeValue(resp.getWriter(), exception.getMessage());
     }

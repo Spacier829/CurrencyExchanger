@@ -2,10 +2,10 @@ package service;
 
 import dao.CurrencyDaoImpl;
 import dto.CurrencyResponseDto;
-import entity.CurrencyEntity;
 import util.Mapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CurrenciesService {
@@ -24,7 +24,7 @@ public class CurrenciesService {
     return currencyDao.findAll().stream().map(Mapper::toResponseDto).collect(Collectors.toList());
   }
 
-  public CurrencyResponseDto findByCode(String code) {
-    return currencyDao.findByCode(code).map(Mapper::toResponseDto).orElse(null);
+  public Optional<CurrencyResponseDto> findByCode(String code) {
+    return currencyDao.findByCode(code).map(Mapper::toResponseDto);
   }
 }
