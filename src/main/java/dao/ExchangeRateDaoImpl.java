@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ExchangeRateDaoImpl implements ExchangeRateDao {
+  private static final ExchangeRateDaoImpl INSTANCE = new ExchangeRateDaoImpl();
   private static final String FIND_ALL_SQL = "SELECT er.id," +
                                              "bc.id bc_id, bc.code bc_code, bc.full_name bc_full_name, bc.sign bc_sign,"
                                              +
@@ -37,6 +38,9 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                                         "VALUES (?,?,?) RETURNING id";
   private static final String UPDATE_SQL = "UPDATE exchange_rates SET rate = ? " +
                                            "WHERE base_currency_id = ? AND target_currency_id = ? RETURNING id";
+
+  private ExchangeRateDaoImpl() {
+  }
 
   @Override
   public List<ExchangeRate> findAll() {
@@ -110,6 +114,10 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
       }
       throw new DaoException("Failed to add Exchange Rate.");
     }
+  }
+
+  public static ExchangeRateDaoImpl getInstance() {
+    return INSTANCE;
   }
 
   private ExchangeRate buildExchangeRate(ResultSet resultSet) throws SQLException {
