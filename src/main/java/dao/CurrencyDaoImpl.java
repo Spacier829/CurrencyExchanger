@@ -2,7 +2,7 @@ package dao;
 
 import util.DataBaseConnectionPool;
 import entity.CurrencyEntity;
-import exception.DaoException;
+import exception.DataBaseException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,7 +34,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
         currencies.add(buildCurrency(resultSet));
       }
     } catch (SQLException e) {
-      throw new DaoException("Failed to find all Currencies.");
+      throw new DataBaseException("Failed to find all Currencies.");
     }
     return currencies;
   }
@@ -49,7 +49,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
         return Optional.of(buildCurrency(resultSet));
       }
     } catch (SQLException e) {
-      throw new DaoException("Failed to find Currency by code: " + code + ".");
+      throw new DataBaseException("Failed to find Currency by code: " + code + ".");
     }
     return Optional.empty();
   }
@@ -63,19 +63,19 @@ public class CurrencyDaoImpl implements CurrencyDao {
       preparedStatement.setString(3, entity.getSign());
       ResultSet resultSet = preparedStatement.executeQuery();
       if (!resultSet.next()) {
-        throw new DaoException("Failed to add currency.");
+        throw new DataBaseException("Failed to add currency.");
       }
       return buildCurrency(resultSet);
     } catch (SQLException exception) {
       String exceptionMessage = exception.getMessage();
       if (exceptionMessage.contains("[SQLITE_CONSTRAINT_UNIQUE]")) {
         if (exceptionMessage.contains("full_name")) {
-          throw new DaoException("Failed to add currency. Full name:" + entity.getFullName() + " already exists.");
+          throw new DataBaseException("Failed to add currency. Name:" + entity.getFullName() + " already exists.");
         } else if (exceptionMessage.contains("code")) {
-          throw new DaoException("Failed to add currency. Code:" + entity.getCode() + " already exists.");
+          throw new DataBaseException("Failed to add currency. Code:" + entity.getCode() + " already exists.");
         }
       }
-      throw new DaoException("Failed to add currency by code:" + entity.getCode() + ".");
+      throw new DataBaseException("Failed to add currency by code:" + entity.getCode() + ".");
     }
   }
 

@@ -1,9 +1,8 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dao.CurrencyDaoImpl;
 import dto.CurrencyResponseDto;
-import exception.DaoException;
+import exception.DataBaseException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,7 +25,8 @@ public class CurrenciesServlet extends HttpServlet {
       resp.setContentType("application/json");
       resp.setCharacterEncoding("UTF-8");
       objectMapper.writeValue(resp.getWriter(), currencies);
-    } catch (DaoException exception) {
+    } catch (DataBaseException exception) {
+      resp.setStatus(500);
       objectMapper.writeValue(resp.getWriter(), exception.getMessage());
     }
   }

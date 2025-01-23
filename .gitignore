@@ -6,6 +6,8 @@ target/
 .idea
 mvnw
 mvnw.cmd
+currency_exchanger.http
+
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml

@@ -3,7 +3,7 @@ package dao;
 import util.DataBaseConnectionPool;
 import entity.CurrencyEntity;
 import entity.ExchangeRateEntity;
-import exception.DaoException;
+import exception.DataBaseException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -52,7 +52,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
         exchangeRates.add(buildExchangeRate(resultSet));
       }
     } catch (SQLException e) {
-      throw new DaoException("Failed to find all Exchange Rates");
+      throw new DataBaseException("Failed to find all Exchange Rates");
     }
     return exchangeRates;
   }
@@ -68,7 +68,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
         return Optional.of(buildExchangeRate(resultSet));
       }
     } catch (SQLException e) {
-      throw new DaoException("Failed to find Exchange Rate by Codes:" + baseCode + ":" + targetCode);
+      throw new DataBaseException("Failed to find Exchange Rate by Codes:" + baseCode + ":" + targetCode);
     }
     return Optional.empty();
   }
@@ -86,8 +86,8 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
         return Optional.of(exchangeRate);
       }
     } catch (SQLException e) {
-      throw new DaoException("Failed to update Exchange Rate by Codes:" + exchangeRate.getBaseCurrency().getCode() +
-                             ":" + exchangeRate.getTargetCurrency().getCode());
+      throw new DataBaseException("Failed to update Exchange Rate by Codes:" + exchangeRate.getBaseCurrency().getCode() +
+                                  ":" + exchangeRate.getTargetCurrency().getCode());
     }
     return Optional.empty();
   }
@@ -101,18 +101,18 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
       preparedStatement.setBigDecimal(3, exchangeRate.getRate());
       ResultSet resultSet = preparedStatement.executeQuery();
       if (!resultSet.next()) {
-        throw new DaoException("Failed to add Exchange Rate");
+        throw new DataBaseException("Failed to add Exchange Rate");
       }
       exchangeRate.setId(resultSet.getLong("id"));
       return exchangeRate;
     } catch (SQLException exception) {
       String exceptionMessage = exception.getMessage();
       if (exceptionMessage.contains("[SQLITE_CONSTRAINT_UNIQUE]")) {
-        throw new DaoException("Failed to add exchange rate. Exchange rate already exists.");
+        throw new DataBaseException("Failed to add exchange rate. Exchange rate already exists.");
       } else if (exceptionMessage.contains("[SQLITE_CONSTRAINT_FOREIGNKEY]")) {
-        throw new DaoException("Failed to add exchange rate. Currency does not exist.");
+        throw new DataBaseException("Failed to add exchange rate. Currency does not exist.");
       }
-      throw new DaoException("Failed to add Exchange Rate.");
+      throw new DataBaseException("Failed to add Exchange Rate.");
     }
   }
 

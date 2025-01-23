@@ -1,6 +1,7 @@
 package util;
 
 import dto.CurrencyResponseDto;
+import dto.ErrorDto;
 import entity.CurrencyEntity;
 
 public class Mapper {
@@ -10,5 +11,9 @@ public class Mapper {
         currency.getFullName(),
         currency.getCode(),
         currency.getSign());
+  }
+
+  public static ErrorDto errorDto(String message) {
+    return new ErrorDto(message);
   }
 }

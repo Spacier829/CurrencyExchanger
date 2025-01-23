@@ -3,23 +3,23 @@ package servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.CurrencyDaoImpl;
 import dto.CurrencyResponseDto;
-import exception.DaoException;
+import dto.ErrorDto;
+import exception.DataBaseException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrenciesService;
-import util.InvalidParameterException;
+import exception.InvalidParameterException;
+import util.Mapper;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/currency/*")
 public class CurrencyServlet extends HttpServlet {
   private final CurrenciesService currenciesService = CurrenciesService.getInstance();
-  private final CurrencyDaoImpl currencyDao = CurrencyDaoImpl.getInstance();
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
@@ -29,6 +29,7 @@ public class CurrencyServlet extends HttpServlet {
     try {
       String pathInfo = req.getPathInfo();
       if (!pathInfo.matches("^/[a-z]{3}$")) {
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         throw new InvalidParameterException("Invalid code");
       }
       String code = pathInfo.substring(1).toUpperCase();
@@ -36,10 +37,12 @@ public class CurrencyServlet extends HttpServlet {
       if (currency.isPresent()) {
         objectMapper.writeValue(resp.getWriter(), currency.get());
       } else {
-        throw new DaoException("Currency not found");
+        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        throw new DataBaseException("Currency not found");
       }
     } catch (RuntimeException exception) {
-      objectMapper.writeValue(resp.getWriter(), exception.getMessage());
+      ErrorDto errorDto = Mapper.errorDto(exception.getMessage());
+      objectMapper.writeValue(resp.getWriter(), errorDto);
     }
   }
 }
