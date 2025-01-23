@@ -38,7 +38,7 @@ public class CurrencyServlet extends HttpServlet {
       } else {
         throw new DaoException("Currency not found");
       }
-    } catch (DaoException exception) {
+    } catch (Run exception) {
       objectMapper.writeValue(resp.getWriter(), exception.getMessage());
     }
   }
