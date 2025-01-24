@@ -16,7 +16,7 @@ public class Mapper {
         currency.getSign());
   }
 
-  public static CurrencyEntity dtoToCurrencyEntity(CurrencyRequestDto currencyRequestDto) {
+  public static CurrencyEntity dtoToCurrency(CurrencyRequestDto currencyRequestDto) {
     return new CurrencyEntity(
         0L,
         currencyRequestDto.getCode(),

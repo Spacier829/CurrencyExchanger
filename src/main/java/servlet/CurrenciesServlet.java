@@ -33,7 +33,7 @@ public class CurrenciesServlet extends HttpServlet {
     String sign = req.getParameter("sign");
 
     CurrencyRequestDto currencyRequestDto = new CurrencyRequestDto(name, code, sign);
-    CurrencyEntity currency = currenciesService.add(Mapper.dtoToCurrencyEntity(currencyRequestDto));
+    CurrencyEntity currency = currenciesService.add(Mapper.dtoToCurrency(currencyRequestDto));
     CurrencyResponseDto currencyResponseDto = Mapper.currencyToResponseDto(currency);
     objectMapper.writeValue(resp.getWriter(), currencyResponseDto);
   }
