@@ -1,5 +1,6 @@
 package dao;
 
+import exception.EntityException;
 import util.DataBaseConnectionPool;
 import entity.CurrencyEntity;
 import entity.ExchangeRateEntity;
@@ -108,9 +109,9 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
     } catch (SQLException exception) {
       String exceptionMessage = exception.getMessage();
       if (exceptionMessage.contains("[SQLITE_CONSTRAINT_UNIQUE]")) {
-        throw new DataBaseException("Failed to add exchange rate. Exchange rate already exists.");
+        throw new EntityException("Failed to add exchange rate. Exchange rate already exists.");
       } else if (exceptionMessage.contains("[SQLITE_CONSTRAINT_FOREIGNKEY]")) {
-        throw new DataBaseException("Failed to add exchange rate. Currency does not exist.");
+        throw new EntityException("Failed to add exchange rate. Currency does not exist.");
       }
       throw new DataBaseException("Failed to add Exchange Rate.");
     }
