@@ -1,10 +1,10 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dao.CurrencyDaoImpl;
 import dto.CurrencyResponseDto;
 import dto.ErrorDto;
 import exception.DataBaseException;
+import exception.NotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,22 +23,28 @@ public class CurrencyServlet extends HttpServlet {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     resp.setContentType("application/json");
     resp.setCharacterEncoding("UTF-8");
     try {
-      String pathInfo = req.getPathInfo();
-      if (!pathInfo.matches("^/[a-z]{3}$")) {
+      Optional<String> pathInfo = Optional.ofNullable(req.getPathInfo());
+      if (pathInfo.isEmpty()) {
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        throw new InvalidParameterException("Invalid code");
-      }
-      String code = pathInfo.substring(1).toUpperCase();
-      Optional<CurrencyResponseDto> currency = currenciesService.findByCode(code);
-      if (currency.isPresent()) {
-        objectMapper.writeValue(resp.getWriter(), currency.get());
+        throw new InvalidParameterException("Code is empty");
       } else {
-        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        throw new DataBaseException("Currency not found");
+        if (!pathInfo.get().matches("^/[a-zA-Z]{3}$")) {
+          resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+          throw new InvalidParameterException("Invalid code");
+        }
+        String code = pathInfo.get().substring(1);
+        Optional<CurrencyResponseDto> currencies = currenciesService.findByCode(code);
+        if (currencies.isPresent()) {
+          resp.setStatus(HttpServletResponse.SC_OK);
+          objectMapper.writeValue(resp.getWriter(), currencies.get());
+        } else {
+          resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+          throw new NotFoundException("Currency not found");
+        }
       }
     } catch (RuntimeException exception) {
       ErrorDto errorDto = Mapper.errorDto(exception.getMessage());
