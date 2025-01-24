@@ -24,31 +24,24 @@ public class CurrencyServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    resp.setContentType("application/json");
-    resp.setCharacterEncoding("UTF-8");
-    try {
-      Optional<String> pathInfo = Optional.ofNullable(req.getPathInfo());
-      if (pathInfo.isEmpty()) {
+    Optional<String> pathInfo = Optional.ofNullable(req.getPathInfo());
+    if (pathInfo.isEmpty()) {
+      resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      throw new InvalidParameterException("Code is empty");
+    } else {
+      if (!pathInfo.get().matches("^/[a-zA-Z]{3}$")) {
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        throw new InvalidParameterException("Code is empty");
-      } else {
-        if (!pathInfo.get().matches("^/[a-zA-Z]{3}$")) {
-          resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-          throw new InvalidParameterException("Invalid code");
-        }
-        String code = pathInfo.get().substring(1);
-        Optional<CurrencyResponseDto> currencies = currenciesService.findByCode(code);
-        if (currencies.isPresent()) {
-          resp.setStatus(HttpServletResponse.SC_OK);
-          objectMapper.writeValue(resp.getWriter(), currencies.get());
-        } else {
-          resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-          throw new NotFoundException("Currency not found");
-        }
+        throw new InvalidParameterException("Invalid code");
       }
-    } catch (RuntimeException exception) {
-      ErrorDto errorDto = Mapper.errorDto(exception.getMessage());
-      objectMapper.writeValue(resp.getWriter(), errorDto);
+      String code = pathInfo.get().substring(1);
+      Optional<CurrencyResponseDto> currencies = currenciesService.findByCode(code);
+      if (currencies.isPresent()) {
+        resp.setStatus(HttpServletResponse.SC_OK);
+        objectMapper.writeValue(resp.getWriter(), currencies.get());
+      } else {
+        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        throw new NotFoundException("Currency not found");
+      }
     }
   }
 }

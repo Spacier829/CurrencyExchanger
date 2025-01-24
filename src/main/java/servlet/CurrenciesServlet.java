@@ -35,6 +35,7 @@ public class CurrenciesServlet extends HttpServlet {
     CurrencyRequestDto currencyRequestDto = new CurrencyRequestDto(name, code, sign);
     CurrencyEntity currency = currenciesService.add(Mapper.dtoToCurrency(currencyRequestDto));
     CurrencyResponseDto currencyResponseDto = Mapper.currencyToResponseDto(currency);
+    resp.setStatus(HttpServletResponse.SC_CREATED);
     objectMapper.writeValue(resp.getWriter(), currencyResponseDto);
   }
 }
