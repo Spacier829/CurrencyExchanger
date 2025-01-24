@@ -1,6 +1,6 @@
 package dao;
 
-import exception.EntityException;
+import exception.ConflictException;
 import util.DataBaseConnectionPool;
 import entity.CurrencyEntity;
 import exception.DataBaseException;
@@ -71,9 +71,9 @@ public class CurrencyDaoImpl implements CurrencyDao {
       String exceptionMessage = exception.getMessage();
       if (exceptionMessage.contains("[SQLITE_CONSTRAINT_UNIQUE]")) {
         if (exceptionMessage.contains("full_name")) {
-          throw new EntityException("Failed to add currency. Name:" + entity.getFullName() + " already exists.");
+          throw new ConflictException("Failed to add currency. Name:" + entity.getFullName() + " already exists.");
         } else if (exceptionMessage.contains("code")) {
-          throw new EntityException("Failed to add currency. Code:" + entity.getCode() + " already exists.");
+          throw new ConflictException("Failed to add currency. Code:" + entity.getCode() + " already exists.");
         }
       }
       throw new DataBaseException("Failed to add currency by code:" + entity.getCode() + ".");
