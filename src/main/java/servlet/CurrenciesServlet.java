@@ -2,7 +2,6 @@ package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.CurrencyResponseDto;
-import exception.DataBaseException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,16 +18,11 @@ public class CurrenciesServlet extends HttpServlet {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    try {
-      List<CurrencyResponseDto> currencies = currenciesService.findAll();
-      resp.setContentType("application/json");
-      resp.setCharacterEncoding("UTF-8");
-      objectMapper.writeValue(resp.getWriter(), currencies);
-    } catch (DataBaseException exception) {
-      resp.setStatus(500);
-      objectMapper.writeValue(resp.getWriter(), exception.getMessage());
-    }
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    resp.setContentType("application/json");
+    resp.setCharacterEncoding("UTF-8");
+    List<CurrencyResponseDto> currencies = currenciesService.findAll();
+    objectMapper.writeValue(resp.getWriter(), currencies);
   }
 
   @Override
