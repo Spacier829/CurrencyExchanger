@@ -21,10 +21,10 @@ public class CurrenciesService {
   }
 
   public List<CurrencyResponseDto> findAll() {
-    return currencyDao.findAll().stream().map(Mapper::toResponseDto).collect(Collectors.toList());
+    return currencyDao.findAll().stream().map(Mapper::currencyToResponseDto).collect(Collectors.toList());
   }
 
   public Optional<CurrencyResponseDto> findByCode(String code) {
-    return currencyDao.findByCode(code).map(Mapper::toResponseDto);
+    return currencyDao.findByCode(code).map(Mapper::currencyToResponseDto);
   }
 }
