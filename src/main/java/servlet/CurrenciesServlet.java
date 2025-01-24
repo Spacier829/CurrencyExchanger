@@ -1,13 +1,16 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.CurrencyRequestDto;
 import dto.CurrencyResponseDto;
+import entity.CurrencyEntity;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrenciesService;
+import util.Mapper;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +27,14 @@ public class CurrenciesServlet extends HttpServlet {
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    super.doPost(req, resp);
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    String name = req.getParameter("name");
+    String code = req.getParameter("code");
+    String sign = req.getParameter("sign");
+
+    CurrencyRequestDto currencyRequestDto = new CurrencyRequestDto(name, code, sign);
+    CurrencyEntity currency = currenciesService.add(Mapper.dtoToCurrencyEntity(currencyRequestDto));
+    CurrencyResponseDto currencyResponseDto = Mapper.currencyToResponseDto(currency);
+    objectMapper.writeValue(resp.getWriter(), currencyResponseDto);
   }
 }
