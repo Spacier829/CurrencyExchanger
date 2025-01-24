@@ -1,5 +1,6 @@
 package util;
 
+import dto.CurrencyRequestDto;
 import dto.CurrencyResponseDto;
 import dto.ErrorDto;
 import dto.ExchangeRateResponseDto;
@@ -13,6 +14,14 @@ public class Mapper {
         currency.getFullName(),
         currency.getCode(),
         currency.getSign());
+  }
+
+  public static CurrencyEntity dtoToCurrencyEntity(CurrencyRequestDto currencyRequestDto) {
+    return new CurrencyEntity(
+        0L,
+        currencyRequestDto.getCode(),
+        currencyRequestDto.getName(),
+        currencyRequestDto.getSign());
   }
 
   public static ErrorDto errorDto(String message) {
