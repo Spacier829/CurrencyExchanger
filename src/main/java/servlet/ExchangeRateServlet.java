@@ -24,11 +24,17 @@ public class ExchangeRateServlet extends HttpServlet {
     String baseCurrencyCode = pathInfo.substring(0, 3).toUpperCase();
     String targetCurrencyCode = pathInfo.substring(3).toUpperCase();
 
+//    Добавить валидатор полей
+
     Optional<ExchangeRateResponseDto> exchangeRateResponseDto = exchangeRatesService.findByCodes(baseCurrencyCode,
         targetCurrencyCode);
-    objectMapper.writeValue(resp.getWriter(), exchangeRateResponseDto.get());
+    if (exchangeRateResponseDto.isPresent()) {
+      objectMapper.writeValue(resp.getWriter(), exchangeRateResponseDto.get());
+    }
+  }
 
-
-    int a = 123;
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    super.doPost(req, resp);
   }
 }
