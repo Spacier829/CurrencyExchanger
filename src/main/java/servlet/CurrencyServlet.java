@@ -33,7 +33,7 @@ public class CurrencyServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         throw new InvalidParameterException("Invalid code");
       }
-      String code = pathInfo.get().substring(1);
+      String code = pathInfo.get().substring(1).toUpperCase();
       Optional<CurrencyResponseDto> currencies = currenciesService.findByCode(code);
       if (currencies.isPresent()) {
         resp.setStatus(HttpServletResponse.SC_OK);

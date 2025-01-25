@@ -1,6 +1,7 @@
 package service;
 
 import dao.CurrencyDaoImpl;
+import dto.CurrencyRequestDto;
 import dto.CurrencyResponseDto;
 import entity.CurrencyEntity;
 import util.Mapper;
@@ -29,7 +30,8 @@ public class CurrenciesService {
     return currencyDao.findByCode(code).map(Mapper::currencyToResponseDto);
   }
 
-  public CurrencyEntity add(CurrencyEntity currency) {
-    return currencyDao.add(currency);
+  public CurrencyResponseDto add(CurrencyRequestDto currencyRequestDto) {
+    CurrencyEntity currency = Mapper.dtoToCurrency(currencyRequestDto);
+    return Mapper.currencyToResponseDto(currencyDao.add(currency));
   }
 }

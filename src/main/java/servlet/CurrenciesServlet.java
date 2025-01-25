@@ -32,9 +32,10 @@ public class CurrenciesServlet extends HttpServlet {
     String code = req.getParameter("code");
     String sign = req.getParameter("sign");
 
+// Добавить валидатор полей
+
     CurrencyRequestDto currencyRequestDto = new CurrencyRequestDto(name, code, sign);
-    CurrencyEntity currency = currenciesService.add(Mapper.dtoToCurrency(currencyRequestDto));
-    CurrencyResponseDto currencyResponseDto = Mapper.currencyToResponseDto(currency);
+    CurrencyResponseDto currencyResponseDto = currenciesService.add(currencyRequestDto);
     resp.setStatus(HttpServletResponse.SC_CREATED);
     objectMapper.writeValue(resp.getWriter(), currencyResponseDto);
   }
