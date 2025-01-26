@@ -1,9 +1,6 @@
 package util;
 
-import dto.CurrencyRequestDto;
-import dto.CurrencyResponseDto;
-import dto.ErrorDto;
-import dto.ExchangeRateResponseDto;
+import dto.*;
 import entity.CurrencyEntity;
 import entity.ExchangeRateEntity;
 
@@ -22,10 +19,6 @@ public class Mapper {
         currencyRequestDto.getCode(),
         currencyRequestDto.getName(),
         currencyRequestDto.getSign());
-  }
-
-  public static ErrorDto errorDto(String message) {
-    return new ErrorDto(message);
   }
 
   public static ExchangeRateResponseDto exchangeRateToResponseDto(ExchangeRateEntity exchangeRate) {
