@@ -2,7 +2,6 @@ package service;
 
 import dao.CurrencyDaoImpl;
 import dao.ExchangeRateDaoImpl;
-import dto.CurrencyResponseDto;
 import dto.ExchangeRateRequestDto;
 import dto.ExchangeRateResponseDto;
 import entity.CurrencyEntity;
@@ -43,5 +42,18 @@ public class ExchangeRatesService {
       exchangeRateEntity.setRate(exchangeRateRequestDto.getRate());
     }
     return Mapper.exchangeRateToResponseDto(exchangeRateDao.add(exchangeRateEntity));
+  }
+
+  public ExchangeRateResponseDto update(ExchangeRateRequestDto exchangeRateRequestDto) {
+    CurrencyDaoImpl currencyDao = CurrencyDaoImpl.getInstance();
+    Optional<CurrencyEntity> baseCurrency = currencyDao.findByCode(exchangeRateRequestDto.getBaseCurrencyCode());
+    Optional<CurrencyEntity> targetCurrency = currencyDao.findByCode(exchangeRateRequestDto.getTargetCurrencyCode());
+    ExchangeRateEntity exchangeRateEntity = new ExchangeRateEntity();
+    if (baseCurrency.isPresent() && targetCurrency.isPresent()) {
+      exchangeRateEntity.setBaseCurrency(baseCurrency.get());
+      exchangeRateEntity.setTargetCurrency(targetCurrency.get());
+      exchangeRateEntity.setRate(exchangeRateRequestDto.getRate());
+    }
+    return Mapper.exchangeRateToResponseDto(exchangeRateDao.update(exchangeRateEntity).get());
   }
 }

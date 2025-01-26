@@ -1,6 +1,7 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.ExchangeRateRequestDto;
 import dto.ExchangeRateResponseDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,6 +12,7 @@ import service.CurrenciesService;
 import service.ExchangeRatesService;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @WebServlet("/exchangeRate/*")
@@ -19,7 +21,16 @@ public class ExchangeRateServlet extends HttpServlet {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String method = req.getMethod();
+    if (!method.equals("PATCH")) {
+      super.service(req, resp);
+    }
+    this.doPatch(req, resp);
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     String pathInfo = req.getPathInfo().replaceFirst("/", "");
     String baseCurrencyCode = pathInfo.substring(0, 3).toUpperCase();
     String targetCurrencyCode = pathInfo.substring(3).toUpperCase();
@@ -31,5 +42,21 @@ public class ExchangeRateServlet extends HttpServlet {
     if (exchangeRateResponseDto.isPresent()) {
       objectMapper.writeValue(resp.getWriter(), exchangeRateResponseDto.get());
     }
+  }
+
+  protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    String pathInfo = req.getPathInfo().replaceFirst("/", "");
+    String baseCurrencyCode = pathInfo.substring(0, 3).toUpperCase();
+    String targetCurrencyCode = pathInfo.substring(3).toUpperCase();
+
+    BigDecimal rate = objectMapper.readValue(req.getParameter("rate"), BigDecimal.class);
+
+    ExchangeRateRequestDto exchangeRateRequestDto = new ExchangeRateRequestDto(baseCurrencyCode,
+        targetCurrencyCode,
+        rate);
+
+    ExchangeRateResponseDto exchangeRateResponseDto = exchangeRatesService.update(exchangeRateRequestDto);
+    resp.setStatus(HttpServletResponse.SC_OK);
+    objectMapper.writeValue(resp.getWriter(), exchangeRateResponseDto);
   }
 }
