@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "CORSFilter", urlPatterns = "/*")
+@WebFilter("/*")
 public class CORSFilter implements Filter {
 
   @Override
