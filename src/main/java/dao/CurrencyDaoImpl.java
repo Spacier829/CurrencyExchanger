@@ -1,9 +1,9 @@
 package dao;
 
-import exception.ConflictException;
-import util.DataBaseConnectionPool;
 import entity.CurrencyEntity;
+import exception.ConflictException;
 import exception.DataBaseException;
+import util.DataBaseConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
