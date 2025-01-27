@@ -1,31 +1,27 @@
 package util;
 
-import dto.*;
+import dto.CurrencyRequestDto;
+import dto.CurrencyResponseDto;
+import dto.ExchangeResponseDto;
 import entity.CurrencyEntity;
 import entity.ExchangeRateEntity;
 
-public class Mapper {
-  public static CurrencyResponseDto currencyToResponseDto(CurrencyEntity currency) {
-    return new CurrencyResponseDto(
-        currency.getId(),
-        currency.getFullName(),
-        currency.getCode(),
-        currency.getSign());
+public class Mapper implements MapperMapStruct {
+
+  MapperMapStruct mapper = MapperMapStruct.INSTANCE;
+
+  @Override
+  public CurrencyResponseDto entityToResponseDto(CurrencyEntity currencyEntity) {
+    return mapper.entityToResponseDto(currencyEntity);
   }
 
-  public static CurrencyEntity dtoToCurrency(CurrencyRequestDto currencyRequestDto) {
-    return new CurrencyEntity(
-        0L,
-        currencyRequestDto.getCode(),
-        currencyRequestDto.getName(),
-        currencyRequestDto.getSign());
+  @Override
+  public CurrencyEntity requestDtoToEntity(CurrencyRequestDto currencyRequestDto) {
+    return mapper.requestDtoToEntity(currencyRequestDto);
   }
 
-  public static ExchangeRateResponseDto exchangeRateToResponseDto(ExchangeRateEntity exchangeRate) {
-    return new ExchangeRateResponseDto(
-        exchangeRate.getId(),
-        currencyToResponseDto(exchangeRate.getBaseCurrency()),
-        currencyToResponseDto(exchangeRate.getTargetCurrency()),
-        exchangeRate.getRate());
+  @Override
+  public ExchangeResponseDto entityToResponseDto(ExchangeRateEntity exchangeRateEntity) {
+    return mapper.entityToResponseDto(exchangeRateEntity);
   }
 }
