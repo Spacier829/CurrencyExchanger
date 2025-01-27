@@ -1,6 +1,6 @@
 package entity;
 
-public class CurrencyEntity{
+public class CurrencyEntity {
   private Long id;
   private String code;
   private String fullName;
