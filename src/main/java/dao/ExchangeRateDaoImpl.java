@@ -1,9 +1,11 @@
 package dao;
 
+import dto.ExchangeRateRequestDto;
 import entity.CurrencyEntity;
 import entity.ExchangeRateEntity;
 import exception.ConflictException;
 import exception.DataBaseException;
+import exception.NotFoundException;
 import util.DataBaseConnectionPool;
 
 import java.sql.Connection;
@@ -116,6 +118,22 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
       }
       throw new DataBaseException("Failed to add exchange rate.");
     }
+  }
+
+  public ExchangeRateEntity addByRequestDto(ExchangeRateRequestDto exchangeRateRequestDto) {
+    CurrencyDaoImpl currencyDao = CurrencyDaoImpl.getInstance();
+    CurrencyEntity baseCurrency = currencyDao.findByCode(exchangeRateRequestDto.getBaseCurrencyCode()).orElseThrow(
+        () -> new NotFoundException(
+            "Currency with code:" + exchangeRateRequestDto.getBaseCurrencyCode() + " not found."));
+    CurrencyEntity targetCurrency = currencyDao.findByCode(exchangeRateRequestDto.getTargetCurrencyCode()).orElseThrow(
+        () -> new NotFoundException(
+            "Currency with code:" + exchangeRateRequestDto.getTargetCurrencyCode() + " not found."));
+
+    ExchangeRateEntity exchangeRate = new ExchangeRateEntity();
+    exchangeRate.setBaseCurrency(baseCurrency);
+    exchangeRate.setTargetCurrency(targetCurrency);
+    exchangeRate.setRate(exchangeRateRequestDto.getRate());
+    return add(exchangeRate);
   }
 
   public static ExchangeRateDaoImpl getInstance() {
