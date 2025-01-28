@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.ExchangeService;
+import util.ValidationUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ public class ExchangeServlet extends HttpServlet {
     BigDecimal amount = new BigDecimal(req.getParameter("amount"));
 
     ExchangeRequestDto exchangeRequestDto = new ExchangeRequestDto(baseCode, targetCode, amount);
+    ValidationUtil.validateExchange(exchangeRequestDto);
     ExchangeResponseDto exchangeResponseDto = exchangeService.calculate(exchangeRequestDto);
     resp.setStatus(HttpServletResponse.SC_OK);
     objectMapper.writeValue(resp.getWriter(), exchangeResponseDto);

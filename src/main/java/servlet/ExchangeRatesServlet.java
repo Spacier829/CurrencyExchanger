@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.ExchangeRatesService;
+import util.ValidationUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ public class ExchangeRatesServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     List<ExchangeRateResponseDto> exchangeRates = exchangeRatesService.findAll();
+    resp.setStatus(HttpServletResponse.SC_OK);
     objectMapper.writeValue(resp.getWriter(), exchangeRates);
   }
 
@@ -34,7 +36,7 @@ public class ExchangeRatesServlet extends HttpServlet {
     ExchangeRateRequestDto exchangeRateRequestDto = new ExchangeRateRequestDto(baseCurrencyCode,
         targetCurrencyCode,
         rate);
-
+    ValidationUtil.validateExchangeRateRequest(exchangeRateRequestDto);
     ExchangeRateResponseDto exchangeRateResponseDto = exchangeRatesService.add(exchangeRateRequestDto);
     resp.setStatus(HttpServletResponse.SC_CREATED);
     objectMapper.writeValue(resp.getWriter(), exchangeRateResponseDto);
