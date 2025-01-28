@@ -6,8 +6,7 @@ import dto.ExchangeRateRequestDto;
 import dto.ExchangeRateResponseDto;
 import entity.CurrencyEntity;
 import entity.ExchangeRateEntity;
-import util.Mapper;
-import util.MapperMapStruct;
+import util.MapperUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 public class ExchangeRatesService {
   private static final ExchangeRatesService INSTANCE = new ExchangeRatesService();
   private final ExchangeRateDaoImpl exchangeRateDao = ExchangeRateDaoImpl.getInstance();
-  private final MapperMapStruct mapper = MapperMapStruct.INSTANCE;
+  private final MapperUtil mapper = MapperUtil.INSTANCE;
 
   private ExchangeRatesService() {
   }
@@ -26,12 +25,11 @@ public class ExchangeRatesService {
   }
 
   public List<ExchangeRateResponseDto> findAll() {
-    return exchangeRateDao.findAll().stream().map(mapper::entityToResponseDto).collect(Collectors.toList());
-//    return exchangeRateDao.findAll().stream().map(Mapper::exchangeRateToResponseDto).collect(Collectors.toList());
+    return exchangeRateDao.findAll().stream().map(mapper::entityToDto).collect(Collectors.toList());
   }
 
   public Optional<ExchangeRateResponseDto> findByCodes(String baseCode, String targetCode) {
-    return exchangeRateDao.findByCodes(baseCode, targetCode).map(Mapper::exchangeRateToResponseDto);
+    return exchangeRateDao.findByCodes(baseCode, targetCode).map(mapper::entityToDto);
   }
 
   public ExchangeRateResponseDto add(ExchangeRateRequestDto exchangeRateRequestDto) {
@@ -44,7 +42,7 @@ public class ExchangeRatesService {
       exchangeRateEntity.setTargetCurrency(targetCurrency.get());
       exchangeRateEntity.setRate(exchangeRateRequestDto.getRate());
     }
-    return Mapper.exchangeRateToResponseDto(exchangeRateDao.add(exchangeRateEntity));
+    return mapper.entityToDto(exchangeRateDao.add(exchangeRateEntity));
   }
 
   public ExchangeRateResponseDto update(ExchangeRateRequestDto exchangeRateRequestDto) {
@@ -57,6 +55,6 @@ public class ExchangeRatesService {
       exchangeRateEntity.setTargetCurrency(targetCurrency.get());
       exchangeRateEntity.setRate(exchangeRateRequestDto.getRate());
     }
-    return Mapper.exchangeRateToResponseDto(exchangeRateDao.update(exchangeRateEntity).get());
+    return mapper.entityToDto(exchangeRateDao.update(exchangeRateEntity).get());
   }
 }

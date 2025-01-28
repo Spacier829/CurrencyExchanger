@@ -4,7 +4,7 @@ import dao.CurrencyDaoImpl;
 import dto.CurrencyRequestDto;
 import dto.CurrencyResponseDto;
 import entity.CurrencyEntity;
-import util.MapperMapStruct;
+import util.MapperUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class CurrenciesService {
   private static final CurrenciesService INSTANCE = new CurrenciesService();
   private final CurrencyDaoImpl currencyDao = CurrencyDaoImpl.getInstance();
-  private final MapperMapStruct mapper = MapperMapStruct.INSTANCE;
+  private final MapperUtil mapper = MapperUtil.INSTANCE;
 
   private CurrenciesService() {
   }
@@ -23,15 +23,15 @@ public class CurrenciesService {
   }
 
   public List<CurrencyResponseDto> findAll() {
-    return currencyDao.findAll().stream().map(mapper::entityToResponseDto).collect(Collectors.toList());
+    return currencyDao.findAll().stream().map(mapper::entityToDto).collect(Collectors.toList());
   }
 
   public Optional<CurrencyResponseDto> findByCode(String code) {
-    return currencyDao.findByCode(code).map(mapper::entityToResponseDto);
+    return currencyDao.findByCode(code).map(mapper::entityToDto);
   }
 
   public CurrencyResponseDto add(CurrencyRequestDto currencyRequestDto) {
-    CurrencyEntity currency = mapper.requestDtoToEntity(currencyRequestDto);
-    return mapper.entityToResponseDto(currencyDao.add(currency));
+    CurrencyEntity currency = mapper.dtoToEntity(currencyRequestDto);
+    return mapper.entityToDto(currencyDao.add(currency));
   }
 }

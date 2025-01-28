@@ -1,6 +1,5 @@
 package service;
 
-import dao.ExchangeRateDaoImpl;
 import dto.CurrencyResponseDto;
 import dto.ExchangeRateResponseDto;
 import dto.ExchangeRequestDto;

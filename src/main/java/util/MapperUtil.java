@@ -2,7 +2,7 @@ package util;
 
 import dto.CurrencyRequestDto;
 import dto.CurrencyResponseDto;
-import dto.ExchangeResponseDto;
+import dto.ExchangeRateResponseDto;
 import entity.CurrencyEntity;
 import entity.ExchangeRateEntity;
 import org.mapstruct.Mapper;
@@ -19,5 +19,5 @@ public interface MapperMapStruct {
   @Mapping(target = "id", constant = "0L")
   CurrencyEntity requestDtoToEntity(CurrencyRequestDto currencyRequestDto);
 
-  ExchangeResponseDto entityToResponseDto(ExchangeRateEntity exchangeRateEntity);
+  ExchangeRateResponseDto entityToResponseDto(ExchangeRateEntity exchangeRateEntity);
 }
