@@ -3,14 +3,11 @@ package servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.CurrencyRequestDto;
 import dto.CurrencyResponseDto;
-import entity.CurrencyEntity;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrenciesService;
-import util.Mapper;
 
 import java.io.IOException;
 import java.util.List;

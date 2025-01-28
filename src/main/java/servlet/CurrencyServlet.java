@@ -2,17 +2,13 @@ package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.CurrencyResponseDto;
-import dto.ErrorDto;
-import exception.DataBaseException;
+import exception.InvalidParameterException;
 import exception.NotFoundException;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrenciesService;
-import exception.InvalidParameterException;
-import util.Mapper;
 
 import java.io.IOException;
 import java.util.Optional;
