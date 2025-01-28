@@ -10,14 +10,14 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface MapperMapStruct {
-  MapperMapStruct INSTANCE = Mappers.getMapper(MapperMapStruct.class);
+public interface MapperUtil {
+  MapperUtil INSTANCE = Mappers.getMapper(MapperUtil.class);
 
   @Mapping(source = "fullName", target = "name")
-  CurrencyResponseDto entityToResponseDto(CurrencyEntity currencyEntity);
+  CurrencyResponseDto entityToDto(CurrencyEntity currencyEntity);
 
   @Mapping(target = "id", constant = "0L")
-  CurrencyEntity requestDtoToEntity(CurrencyRequestDto currencyRequestDto);
+  CurrencyEntity dtoToEntity(CurrencyRequestDto currencyRequestDto);
 
-  ExchangeRateResponseDto entityToResponseDto(ExchangeRateEntity exchangeRateEntity);
+  ExchangeRateResponseDto entityToDto(ExchangeRateEntity exchangeRateEntity);
 }
