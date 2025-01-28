@@ -17,6 +17,7 @@ public interface MapperUtil {
   CurrencyResponseDto entityToDto(CurrencyEntity currencyEntity);
 
   @Mapping(target = "id", constant = "0L")
+  @Mapping(source = "name", target = "fullName")
   CurrencyEntity dtoToEntity(CurrencyRequestDto currencyRequestDto);
 
   ExchangeRateResponseDto entityToDto(ExchangeRateEntity exchangeRateEntity);
