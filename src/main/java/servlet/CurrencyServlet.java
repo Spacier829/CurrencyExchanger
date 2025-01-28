@@ -32,7 +32,7 @@ public class CurrencyServlet extends HttpServlet {
     if (currencies.isEmpty()) {
       throw new NotFoundException("Currency not found");
     }
-    
+    resp.setStatus(HttpServletResponse.SC_OK);
     objectMapper.writeValue(resp.getWriter(), currencies.get());
   }
 }

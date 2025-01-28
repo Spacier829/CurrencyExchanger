@@ -3,12 +3,14 @@ package servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.ExchangeRateRequestDto;
 import dto.ExchangeRateResponseDto;
+import exception.NotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.ExchangeRatesService;
+import util.ValidationUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -30,32 +32,42 @@ public class ExchangeRateServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    String pathInfo = req.getPathInfo().replaceFirst("/", "");
-    String baseCurrencyCode = pathInfo.substring(0, 3).toUpperCase();
-    String targetCurrencyCode = pathInfo.substring(3).toUpperCase();
+    Optional<String> pathInfo = Optional.ofNullable(req.getPathInfo());
+    ValidationUtil.validatePath(pathInfo.orElse(""));
 
-//    Добавить валидатор полей
+    if (pathInfo.isPresent()) {
+      String baseCurrencyCode = pathInfo.get().substring(1, 4).toUpperCase();
+      ValidationUtil.validateCode(baseCurrencyCode);
+      String targetCurrencyCode = pathInfo.get().substring(4).toUpperCase();
+      ValidationUtil.validateCode(targetCurrencyCode);
 
-    Optional<ExchangeRateResponseDto> exchangeRateResponseDto = exchangeRatesService.findByCodes(baseCurrencyCode,
-        targetCurrencyCode);
-    if (exchangeRateResponseDto.isPresent()) {
+      Optional<ExchangeRateResponseDto> exchangeRateResponseDto = exchangeRatesService.findByCodes(baseCurrencyCode,
+          targetCurrencyCode);
+      if (exchangeRateResponseDto.isEmpty()) {
+        throw new NotFoundException("Exchange rate not found");
+      }
+      resp.setStatus(HttpServletResponse.SC_OK);
       objectMapper.writeValue(resp.getWriter(), exchangeRateResponseDto.get());
     }
   }
 
   protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    String pathInfo = req.getPathInfo().replaceFirst("/", "");
-    String baseCurrencyCode = pathInfo.substring(0, 3).toUpperCase();
-    String targetCurrencyCode = pathInfo.substring(3).toUpperCase();
+    Optional<String> pathInfo = Optional.ofNullable(req.getPathInfo());
+    ValidationUtil.validatePath(pathInfo.orElse(""));
 
-    BigDecimal rate = objectMapper.readValue(req.getParameter("rate"), BigDecimal.class);
+    if (pathInfo.isPresent()) {
+      String baseCurrencyCode = pathInfo.get().substring(1, 4).toUpperCase();
+      String targetCurrencyCode = pathInfo.get().substring(4).toUpperCase();
 
-    ExchangeRateRequestDto exchangeRateRequestDto = new ExchangeRateRequestDto(baseCurrencyCode,
-        targetCurrencyCode,
-        rate);
+      BigDecimal rate = objectMapper.readValue(req.getParameter("rate"), BigDecimal.class);
 
-    ExchangeRateResponseDto exchangeRateResponseDto = exchangeRatesService.update(exchangeRateRequestDto);
-    resp.setStatus(HttpServletResponse.SC_OK);
-    objectMapper.writeValue(resp.getWriter(), exchangeRateResponseDto);
+      ExchangeRateRequestDto exchangeRateRequestDto = new ExchangeRateRequestDto(baseCurrencyCode,
+          targetCurrencyCode,
+          rate);
+      ValidationUtil.validateExchangeRateRequest(exchangeRateRequestDto);
+      ExchangeRateResponseDto exchangeRateResponseDto = exchangeRatesService.update(exchangeRateRequestDto);
+      resp.setStatus(HttpServletResponse.SC_OK);
+      objectMapper.writeValue(resp.getWriter(), exchangeRateResponseDto);
+    }
   }
 }

@@ -6,6 +6,7 @@ import dto.ExchangeRateRequestDto;
 import dto.ExchangeRateResponseDto;
 import entity.CurrencyEntity;
 import entity.ExchangeRateEntity;
+import exception.NotFoundException;
 import util.MapperUtil;
 
 import java.util.List;
@@ -33,28 +34,26 @@ public class ExchangeRatesService {
   }
 
   public ExchangeRateResponseDto add(ExchangeRateRequestDto exchangeRateRequestDto) {
-    CurrencyDaoImpl currencyDao = CurrencyDaoImpl.getInstance();
-    Optional<CurrencyEntity> baseCurrency = currencyDao.findByCode(exchangeRateRequestDto.getBaseCurrencyCode());
-    Optional<CurrencyEntity> targetCurrency = currencyDao.findByCode(exchangeRateRequestDto.getTargetCurrencyCode());
-    ExchangeRateEntity exchangeRateEntity = new ExchangeRateEntity();
-    if (baseCurrency.isPresent() && targetCurrency.isPresent()) {
-      exchangeRateEntity.setBaseCurrency(baseCurrency.get());
-      exchangeRateEntity.setTargetCurrency(targetCurrency.get());
-      exchangeRateEntity.setRate(exchangeRateRequestDto.getRate());
-    }
-    return mapper.entityToDto(exchangeRateDao.add(exchangeRateEntity));
+    return mapper.entityToDto(exchangeRateDao.addByRequestDto(exchangeRateRequestDto));
   }
 
   public ExchangeRateResponseDto update(ExchangeRateRequestDto exchangeRateRequestDto) {
     CurrencyDaoImpl currencyDao = CurrencyDaoImpl.getInstance();
     Optional<CurrencyEntity> baseCurrency = currencyDao.findByCode(exchangeRateRequestDto.getBaseCurrencyCode());
-    Optional<CurrencyEntity> targetCurrency = currencyDao.findByCode(exchangeRateRequestDto.getTargetCurrencyCode());
-    ExchangeRateEntity exchangeRateEntity = new ExchangeRateEntity();
-    if (baseCurrency.isPresent() && targetCurrency.isPresent()) {
-      exchangeRateEntity.setBaseCurrency(baseCurrency.get());
-      exchangeRateEntity.setTargetCurrency(targetCurrency.get());
-      exchangeRateEntity.setRate(exchangeRateRequestDto.getRate());
+    if (baseCurrency.isEmpty()) {
+      throw new NotFoundException("Currency with code:" + exchangeRateRequestDto.getBaseCurrencyCode() + " not found");
     }
-    return mapper.entityToDto(exchangeRateDao.update(exchangeRateEntity).get());
+    Optional<CurrencyEntity> targetCurrency = currencyDao.findByCode(exchangeRateRequestDto.getTargetCurrencyCode());
+    if (targetCurrency.isEmpty()) {
+      throw new NotFoundException("Currency with code:" + exchangeRateRequestDto.getTargetCurrencyCode()
+                                  + " not found");
+    }
+    ExchangeRateEntity exchangeRateEntity = new ExchangeRateEntity();
+    exchangeRateEntity.setBaseCurrency(baseCurrency.get());
+    exchangeRateEntity.setTargetCurrency(targetCurrency.get());
+    exchangeRateEntity.setRate(exchangeRateRequestDto.getRate());
+    exchangeRateEntity = exchangeRateDao.update(exchangeRateEntity).orElse(null);
+
+    return mapper.entityToDto(exchangeRateEntity);
   }
 }
