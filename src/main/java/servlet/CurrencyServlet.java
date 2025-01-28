@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrenciesService;
+import util.ValidationUtil;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -22,22 +23,16 @@ public class CurrencyServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     Optional<String> pathInfo = Optional.ofNullable(req.getPathInfo());
     if (pathInfo.isEmpty()) {
-      resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       throw new InvalidParameterException("Code is empty");
-    } else {
-      if (!pathInfo.get().matches("^/[a-zA-Z]{3}$")) {
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        throw new InvalidParameterException("Invalid code");
-      }
-      String code = pathInfo.get().substring(1).toUpperCase();
-      Optional<CurrencyResponseDto> currencies = currenciesService.findByCode(code);
-      if (currencies.isPresent()) {
-        resp.setStatus(HttpServletResponse.SC_OK);
-        objectMapper.writeValue(resp.getWriter(), currencies.get());
-      } else {
-        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        throw new NotFoundException("Currency not found");
-      }
     }
+
+    String code = pathInfo.get().substring(1).toUpperCase();
+    ValidationUtil.validateCode(code);
+    Optional<CurrencyResponseDto> currencies = currenciesService.findByCode(code);
+    if (currencies.isEmpty()) {
+      throw new NotFoundException("Currency not found");
+    }
+    
+    objectMapper.writeValue(resp.getWriter(), currencies.get());
   }
 }
