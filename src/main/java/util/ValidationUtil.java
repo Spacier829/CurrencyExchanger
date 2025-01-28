@@ -2,6 +2,7 @@ package util;
 
 import dto.CurrencyRequestDto;
 import dto.ExchangeRateRequestDto;
+import dto.ExchangeRequestDto;
 import exception.InvalidParameterException;
 
 import java.math.BigDecimal;
@@ -19,6 +20,12 @@ public class ValidationUtil {
     validateCode(exchangeRateRequestDto.getBaseCurrencyCode());
     validateCode(exchangeRateRequestDto.getTargetCurrencyCode());
     validateRate(exchangeRateRequestDto.getRate());
+  }
+
+  public static void validateExchange(ExchangeRequestDto exchangeRequestDto) {
+    validateCode(exchangeRequestDto.getBaseCurrencyCode());
+    validateCode(exchangeRequestDto.getTargetCurrencyCode());
+    validateRate(exchangeRequestDto.getAmount());
   }
 
   public static void validateCode(String code) {
