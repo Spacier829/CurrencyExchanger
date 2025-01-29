@@ -27,7 +27,7 @@ public class ExchangeServlet extends HttpServlet {
 
     ExchangeRequestDto exchangeRequestDto = new ExchangeRequestDto(baseCode, targetCode, amount);
     ValidationUtil.validateExchange(exchangeRequestDto);
-    ExchangeResponseDto exchangeResponseDto = exchangeService.getResult(exchangeRequestDto);
+    ExchangeResponseDto exchangeResponseDto = exchangeService.getConvertedAmount(exchangeRequestDto);
     resp.setStatus(HttpServletResponse.SC_OK);
     objectMapper.writeValue(resp.getWriter(), exchangeResponseDto);
   }

@@ -22,7 +22,7 @@ public class ExchangeService {
     return INSTANCE;
   }
 
-  public ExchangeResponseDto getResult(ExchangeRequestDto exchangeRequestDto) {
+  public ExchangeResponseDto getConvertedAmount(ExchangeRequestDto exchangeRequestDto) {
     Optional<ExchangeRateResponseDto> exchangeRateResponseDto = getExchangeRate(exchangeRequestDto);
     if (exchangeRateResponseDto.isEmpty()) {
       exchangeRateResponseDto = getReverseExchangeRate(exchangeRequestDto);
