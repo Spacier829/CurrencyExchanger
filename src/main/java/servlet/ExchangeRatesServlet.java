@@ -3,7 +3,6 @@ package servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.ExchangeRateRequestDto;
 import dto.ExchangeRateResponseDto;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +27,7 @@ public class ExchangeRatesServlet extends HttpServlet {
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     String baseCurrencyCode = req.getParameter("baseCurrencyCode").toUpperCase();
     String targetCurrencyCode = req.getParameter("targetCurrencyCode").toUpperCase();
     BigDecimal rate = objectMapper.readValue(req.getParameter("rate"), BigDecimal.class);

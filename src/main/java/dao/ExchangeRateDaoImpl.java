@@ -117,7 +117,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
     if (baseCurrency.isEmpty()) {
       throw new NotFoundException("Currency with code:" + exchangeRateRequestDto.getBaseCurrencyCode() + " not found.");
     }
-    Optional<CurrencyEntity> targetCurrency = currencyDao.findByCode(exchangeRateRequestDto.getBaseCurrencyCode());
+    Optional<CurrencyEntity> targetCurrency = currencyDao.findByCode(exchangeRateRequestDto.getTargetCurrencyCode());
     if (targetCurrency.isEmpty()) {
       throw new NotFoundException(
           "Currency with code:" + exchangeRateRequestDto.getTargetCurrencyCode() + " not found.");
