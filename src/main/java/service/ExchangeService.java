@@ -1,16 +1,16 @@
 package service;
 
-import dto.CurrencyResponseDto;
 import dto.ExchangeRateResponseDto;
 import dto.ExchangeRequestDto;
 import dto.ExchangeResponseDto;
+import exception.NotFoundException;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
-import static java.math.RoundingMode.HALF_DOWN;
-
 public class ExchangeService {
+  private static final String USD_CODE = "USD";
   private static final ExchangeService INSTANCE = new ExchangeService();
   private final ExchangeRatesService exchangeRatesService = ExchangeRatesService.getInstance();
   private final CurrenciesService currenciesService = CurrenciesService.getInstance();
@@ -22,41 +22,75 @@ public class ExchangeService {
     return INSTANCE;
   }
 
-  public ExchangeResponseDto calculate(ExchangeRequestDto exchangeRequestDto) {
-    ExchangeResponseDto exchangeResponseDto = new ExchangeResponseDto();
-    Optional<CurrencyResponseDto> baseCurrency = currenciesService.findByCode(exchangeRequestDto.getBaseCurrencyCode());
-    Optional<CurrencyResponseDto> targetCurrency =
-        currenciesService.findByCode(exchangeRequestDto.getTargetCurrencyCode());
-    if (baseCurrency.isPresent() && targetCurrency.isPresent()) {
-      exchangeResponseDto.setBaseCurrency(baseCurrency.get());
-      exchangeResponseDto.setTargetCurrency(targetCurrency.get());
+  public ExchangeResponseDto getResult(ExchangeRequestDto exchangeRequestDto) {
+    Optional<ExchangeRateResponseDto> exchangeRateResponseDto = getExchangeRate(exchangeRequestDto);
+    if (exchangeRateResponseDto.isEmpty()) {
+      exchangeRateResponseDto = getReverseExchangeRate(exchangeRequestDto);
     }
-    BigDecimal rate = getRate(exchangeRequestDto.getBaseCurrencyCode(), exchangeRequestDto.getTargetCurrencyCode());
-    exchangeResponseDto.setRate(rate);
-    exchangeResponseDto.setAmount(exchangeRequestDto.getAmount());
-    exchangeResponseDto.setConvertedAmount(exchangeRequestDto.getAmount().multiply(rate));
+    if (exchangeRateResponseDto.isEmpty()) {
+      exchangeRateResponseDto = getCrossExchangeRate(exchangeRequestDto);
+    }
+    if (exchangeRateResponseDto.isEmpty()) {
+      throw new NotFoundException("No exchange rate found");
+    }
+    return buildExchangeResponseDto(exchangeRateResponseDto.get(), exchangeRequestDto.getAmount());
+  }
+
+  private Optional<ExchangeRateResponseDto> getExchangeRate(ExchangeRequestDto exchangeRequestDto) {
+    return exchangeRatesService.findByCodes(exchangeRequestDto.getBaseCurrencyCode(),
+        exchangeRequestDto.getTargetCurrencyCode());
+  }
+
+  private Optional<ExchangeRateResponseDto> getReverseExchangeRate(ExchangeRequestDto exchangeRequestDto) {
+    Optional<ExchangeRateResponseDto> reverseExchangeRateResponseDto = exchangeRatesService.findByCodes(
+        exchangeRequestDto.getTargetCurrencyCode(),
+        exchangeRequestDto.getBaseCurrencyCode());
+    if (reverseExchangeRateResponseDto.isEmpty()) {
+      return Optional.empty();
+    } else {
+      reverseExchangeRateResponseDto.get().setRate(
+          new BigDecimal(1).divide(reverseExchangeRateResponseDto.get().getRate(), 2, RoundingMode.HALF_DOWN));
+      return reverseExchangeRateResponseDto;
+    }
+  }
+
+  private Optional<ExchangeRateResponseDto> getCrossExchangeRate(ExchangeRequestDto exchangeRequestDto) {
+    Optional<ExchangeRateResponseDto> usdToBaseCurrency = exchangeRatesService.findByCodes(USD_CODE,
+        exchangeRequestDto.getBaseCurrencyCode());
+    Optional<ExchangeRateResponseDto> usdToTargetCurrency = exchangeRatesService.findByCodes(USD_CODE,
+        exchangeRequestDto.getTargetCurrencyCode());
+    if (usdToBaseCurrency.isEmpty() || usdToTargetCurrency.isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.of(buildCrossRate(usdToBaseCurrency.get(), usdToTargetCurrency.get()));
+  }
+
+
+  private BigDecimal calculateAmount(BigDecimal rate, BigDecimal amount) {
+    return rate.multiply(amount).setScale(2, RoundingMode.HALF_DOWN);
+  }
+
+  private BigDecimal calculateCrossRate(BigDecimal baseRate, BigDecimal targetRate) {
+    return baseRate.divide(targetRate, 2, RoundingMode.HALF_DOWN);
+  }
+
+  private ExchangeResponseDto buildExchangeResponseDto(ExchangeRateResponseDto exchangeRateResponseDto,
+                                                       BigDecimal amount) {
+    ExchangeResponseDto exchangeResponseDto = new ExchangeResponseDto();
+    exchangeResponseDto.setBaseCurrency(exchangeRateResponseDto.getBaseCurrency());
+    exchangeResponseDto.setTargetCurrency(exchangeRateResponseDto.getTargetCurrency());
+    exchangeResponseDto.setRate(exchangeRateResponseDto.getRate());
+    exchangeResponseDto.setAmount(amount);
+    exchangeResponseDto.setConvertedAmount(calculateAmount(amount, exchangeRateResponseDto.getRate()));
     return exchangeResponseDto;
   }
 
-  private BigDecimal getRate(String baseCurrency, String targetCurrency) {
-    Optional<ExchangeRateResponseDto> exchangeRateResponseDto = exchangeRatesService.findByCodes(baseCurrency,
-        targetCurrency);
-    if (exchangeRateResponseDto.isPresent()) {
-      return exchangeRateResponseDto.get().getRate();
-    }
-    exchangeRateResponseDto = exchangeRatesService.findByCodes(targetCurrency, baseCurrency);
-    if (exchangeRateResponseDto.isPresent()) {
-      return new BigDecimal(1).divide(exchangeRateResponseDto.get().getRate(), 6, HALF_DOWN);
-    }
-    exchangeRateResponseDto = exchangeRatesService.findByCodes("USD", baseCurrency);
-    if (exchangeRateResponseDto.isPresent()) {
-      Optional<ExchangeRateResponseDto> exchangeRateResponseDto2 = exchangeRatesService.findByCodes("USD",
-          targetCurrency);
-      if (exchangeRateResponseDto2.isPresent()) {
-        return
-            exchangeRateResponseDto2.get().getRate().divide(exchangeRateResponseDto.get().getRate(), 6, HALF_DOWN);
-      }
-    }
-    return null;
+  private ExchangeRateResponseDto buildCrossRate(ExchangeRateResponseDto baseExchangeRate,
+                                                 ExchangeRateResponseDto targetExchangeRate) {
+    return new ExchangeRateResponseDto(
+        0L,
+        baseExchangeRate.getTargetCurrency(),
+        targetExchangeRate.getTargetCurrency(),
+        calculateCrossRate(baseExchangeRate.getRate(), targetExchangeRate.getRate()));
   }
 }

@@ -21,13 +21,13 @@ public class ExchangeServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    String baseCode = req.getParameter("from");
-    String targetCode = req.getParameter("to");
+    String baseCode = req.getParameter("from").toUpperCase();
+    String targetCode = req.getParameter("to").toUpperCase();
     BigDecimal amount = new BigDecimal(req.getParameter("amount"));
 
     ExchangeRequestDto exchangeRequestDto = new ExchangeRequestDto(baseCode, targetCode, amount);
     ValidationUtil.validateExchange(exchangeRequestDto);
-    ExchangeResponseDto exchangeResponseDto = exchangeService.calculate(exchangeRequestDto);
+    ExchangeResponseDto exchangeResponseDto = exchangeService.getResult(exchangeRequestDto);
     resp.setStatus(HttpServletResponse.SC_OK);
     objectMapper.writeValue(resp.getWriter(), exchangeResponseDto);
   }

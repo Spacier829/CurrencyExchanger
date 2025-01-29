@@ -19,13 +19,13 @@ public class ValidationUtil {
   public static void validateExchangeRateRequest(ExchangeRateRequestDto exchangeRateRequestDto) {
     validateCode(exchangeRateRequestDto.getBaseCurrencyCode());
     validateCode(exchangeRateRequestDto.getTargetCurrencyCode());
-    validateRate(exchangeRateRequestDto.getRate());
+    validateBigDecimal(exchangeRateRequestDto.getRate(), "Rate");
   }
 
   public static void validateExchange(ExchangeRequestDto exchangeRequestDto) {
     validateCode(exchangeRequestDto.getBaseCurrencyCode());
     validateCode(exchangeRequestDto.getTargetCurrencyCode());
-    validateRate(exchangeRequestDto.getAmount());
+    validateBigDecimal(exchangeRequestDto.getAmount(), "Amount");
   }
 
   public static void validateCode(String code) {
@@ -49,9 +49,9 @@ public class ValidationUtil {
     }
   }
 
-  public static void validateRate(BigDecimal rate) {
+  public static void validateBigDecimal(BigDecimal rate, String parameterName) {
     if (rate.compareTo(BigDecimal.ZERO) <= 0) {
-      throw new InvalidParameterException("Rate must be greater than zero");
+      throw new InvalidParameterException(parameterName + " must be greater than zero");
     }
   }
 }
