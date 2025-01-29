@@ -27,16 +27,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                                              " FROM exchange_rates AS er" +
                                              " JOIN currencies as bc on bc.id = base_currency_id" +
                                              " JOIN currencies as tc on tc.id = target_currency_id";
-  private static final String FIND_BY_CODES_SQL = "SELECT er.id," +
-                                                  "bc.id bc_id, bc.code bc_code, bc.full_name bc_full_name, bc.sign bc_sign,"
-                                                  +
-                                                  "tc.id tc_id, tc.code tc_code, tc.full_name tc_full_name, tc.sign tc_sign,"
-                                                  +
-                                                  "er.rate " +
-                                                  " FROM exchange_rates AS er" +
-                                                  " JOIN currencies as bc on bc.id = base_currency_id" +
-                                                  " JOIN currencies as tc on tc.id = target_currency_id" +
-                                                  " WHERE bc.code = ? AND tc.code = ?";
+  private static final String FIND_BY_CODES_SQL = FIND_ALL_SQL + " WHERE bc.code = ? AND tc.code = ?";
   private static final String ADD_SQL = "INSERT INTO exchange_rates (base_currency_id, target_currency_id, rate) " +
                                         "VALUES (?,?,?) RETURNING id";
   private static final String UPDATE_SQL = "UPDATE exchange_rates SET rate = ? " +

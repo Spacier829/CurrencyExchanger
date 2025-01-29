@@ -17,9 +17,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
   private static final CurrencyDaoImpl INSTANCE = new CurrencyDaoImpl();
   private static final String FIND_ALL_SQL = "SELECT id, code, full_name, sign " +
                                              "FROM currencies";
-  private static final String FIND_BY_CODE_SQL = "SELECT id, code, full_name, sign " +
-                                                 "FROM currencies " +
-                                                 "WHERE code = ?";
+  private static final String FIND_BY_CODE_SQL = FIND_ALL_SQL + " WHERE code = ?";
   private static final String ADD_SQL = "INSERT INTO currencies (code, full_name, sign) " +
                                         "VALUES (?,?,?) " +
                                         "RETURNING id, code, full_name, sign";
