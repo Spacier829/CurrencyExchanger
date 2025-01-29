@@ -113,16 +113,18 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
 
   public ExchangeRateEntity addByRequestDto(ExchangeRateRequestDto exchangeRateRequestDto) {
     CurrencyDaoImpl currencyDao = CurrencyDaoImpl.getInstance();
-    CurrencyEntity baseCurrency = currencyDao.findByCode(exchangeRateRequestDto.getBaseCurrencyCode()).orElseThrow(
-        () -> new NotFoundException(
-            "Currency with code:" + exchangeRateRequestDto.getBaseCurrencyCode() + " not found."));
-    CurrencyEntity targetCurrency = currencyDao.findByCode(exchangeRateRequestDto.getTargetCurrencyCode()).orElseThrow(
-        () -> new NotFoundException(
-            "Currency with code:" + exchangeRateRequestDto.getTargetCurrencyCode() + " not found."));
-
+    Optional<CurrencyEntity> baseCurrency = currencyDao.findByCode(exchangeRateRequestDto.getBaseCurrencyCode());
+    if (baseCurrency.isEmpty()) {
+      throw new NotFoundException("Currency with code:" + exchangeRateRequestDto.getBaseCurrencyCode() + " not found.");
+    }
+    Optional<CurrencyEntity> targetCurrency = currencyDao.findByCode(exchangeRateRequestDto.getBaseCurrencyCode());
+    if (targetCurrency.isEmpty()) {
+      throw new NotFoundException(
+          "Currency with code:" + exchangeRateRequestDto.getTargetCurrencyCode() + " not found.");
+    }
     ExchangeRateEntity exchangeRate = new ExchangeRateEntity();
-    exchangeRate.setBaseCurrency(baseCurrency);
-    exchangeRate.setTargetCurrency(targetCurrency);
+    exchangeRate.setBaseCurrency(baseCurrency.get());
+    exchangeRate.setTargetCurrency(targetCurrency.get());
     exchangeRate.setRate(exchangeRateRequestDto.getRate());
     return add(exchangeRate);
   }
