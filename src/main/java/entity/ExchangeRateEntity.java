@@ -49,14 +49,4 @@ public class ExchangeRateEntity {
   public void setRate(BigDecimal rate) {
     this.rate = rate;
   }
-
-  @Override
-  public String toString() {
-    return "ExchangeRate{" +
-           "id=" + id +
-           ", baseCurrency=" + baseCurrency +
-           ", targetCurrency=" + targetCurrency +
-           ", rate=" + rate +
-           '}';
-  }
 }
