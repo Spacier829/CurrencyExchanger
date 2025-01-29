@@ -16,7 +16,6 @@ currency_exchanger.http
 *.iws
 *.iml
 *.ipr
-src/main/java/Main.java
 
 ### Eclipse ###
 .apt_generated
