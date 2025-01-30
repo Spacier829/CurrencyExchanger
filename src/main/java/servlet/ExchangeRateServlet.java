@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends HttpServlet {
+  private static final String RATE_FORM = "rate=";
   private final ExchangeRatesService exchangeRatesService = ExchangeRatesService.getInstance();
   private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -58,8 +59,9 @@ public class ExchangeRateServlet extends HttpServlet {
     if (pathInfo.isPresent()) {
       String baseCurrencyCode = pathInfo.get().substring(1, 4).toUpperCase();
       String targetCurrencyCode = pathInfo.get().substring(4).toUpperCase();
+      String rateBody = req.getReader().readLine().replace(RATE_FORM,"");
 
-      BigDecimal rate = objectMapper.readValue(req.getParameter("rate"), BigDecimal.class);
+      BigDecimal rate = objectMapper.readValue(rateBody, BigDecimal.class);
 
       ExchangeRateRequestDto exchangeRateRequestDto = new ExchangeRateRequestDto(baseCurrencyCode,
           targetCurrencyCode,

@@ -8,12 +8,19 @@
 	"item": [
 		{
 			"name": "GET /currencies",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"auth": {
 					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
 				"url": {
 					"raw": "77.239.100.191:8080/currency_exchanger/currencies",
 					"host": [
@@ -30,12 +37,19 @@
 		},
 		{
 			"name": "GET /currency/GBP",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"auth": {
 					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
 				"url": {
 					"raw": "77.239.100.191:8080/currency_exchanger/currency/GBP",
 					"host": [
@@ -106,23 +120,7 @@
 				"header": [],
 				"body": {
 					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "name",
-							"value": "Test",
-							"type": "text"
-						},
-						{
-							"key": "code",
-							"value": "VAL",
-							"type": "text"
-						},
-						{
-							"key": "sign",
-							"value": "V",
-							"type": "text"
-						}
-					]
+					"urlencoded": []
 				},
 				"url": {
 					"raw": "77.239.100.191:8080/currency_exchanger/exchangeRates",
@@ -151,23 +149,7 @@
 				"header": [],
 				"body": {
 					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "name",
-							"value": "Test",
-							"type": "text"
-						},
-						{
-							"key": "code",
-							"value": "VAL",
-							"type": "text"
-						},
-						{
-							"key": "sign",
-							"value": "V",
-							"type": "text"
-						}
-					]
+					"urlencoded": []
 				},
 				"url": {
 					"raw": "77.239.100.191:8080/currency_exchanger/exchangeRate/USDEUR",
@@ -245,7 +227,7 @@
 					]
 				},
 				"url": {
-					"raw": "77.239.100.191:8080/currency_exchanger/exchangeRate/RUBAUD?rate=50",
+					"raw": "77.239.100.191:8080/currency_exchanger/exchangeRate/RUBAUD",
 					"host": [
 						"77.239.100.191"
 					],
@@ -254,12 +236,6 @@
 						"currency_exchanger",
 						"exchangeRate",
 						"RUBAUD"
-					],
-					"query": [
-						{
-							"key": "rate",
-							"value": "50"
-						}
 					]
 				}
 			},
@@ -297,7 +273,7 @@
 					]
 				},
 				"url": {
-					"raw": "77.239.100.191:8080/currency_exchanger/exchange?from=RUB&to=AUD&amount=12",
+					"raw": "77.239.100.191:8080/currency_exchanger/exchange",
 					"host": [
 						"77.239.100.191"
 					],
@@ -305,20 +281,6 @@
 					"path": [
 						"currency_exchanger",
 						"exchange"
-					],
-					"query": [
-						{
-							"key": "from",
-							"value": "RUB"
-						},
-						{
-							"key": "to",
-							"value": "AUD"
-						},
-						{
-							"key": "amount",
-							"value": "12"
-						}
 					]
 				}
 			},

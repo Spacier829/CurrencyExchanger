@@ -36,13 +36,16 @@ public class ValidationUtil {
 
   private static void validateParameter(String parameter, String parameterName) {
     if (parameter.isEmpty() || parameter.isBlank()) {
-      throw new InvalidParameterException(parameterName + " cannot be empty");
+      throw new InvalidParameterException(parameterName + " cannot be empty.");
+    }
+    if (parameter.length() > 20) {
+      throw new InvalidParameterException(parameterName + " too long.");
     }
   }
 
   public static void validatePath(String path) {
     if (path.isEmpty() || path.isBlank()) {
-      throw new InvalidParameterException("Codes are empty");
+      throw new InvalidParameterException("Codes are empty.");
     }
     if (!path.matches("^/[a-zA-Z]{6}$")) {
       throw new InvalidParameterException("Invalid path. Codes must contain 6 letters.");
@@ -51,7 +54,7 @@ public class ValidationUtil {
 
   public static void validateBigDecimal(BigDecimal rate, String parameterName) {
     if (rate.compareTo(BigDecimal.ZERO) <= 0) {
-      throw new InvalidParameterException(parameterName + " must be greater than zero");
+      throw new InvalidParameterException(parameterName + " must be greater than zero.");
     }
   }
 }
