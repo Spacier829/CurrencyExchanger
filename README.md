@@ -18,6 +18,7 @@ REST-api для обменных курсов валют
 ## Особенности
 
 <h3>Валюты</h3>
+
 GET `/currencies`    
 Получение списка всех валют. Ответ:
 
@@ -217,7 +218,9 @@ GET `/exchange?from=RUB&to=AUD&amount=12`
   }
 ]
 ```
+
 <h3>Ответ в случае ошибки</h3>
+
 ```json
 {
   "message": "Failed to add exchange rate. Exchange rate already exists."
