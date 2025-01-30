@@ -1,0 +1,328 @@
+{
+	"info": {
+		"_postman_id": "c2c46b68-a25f-48ab-ac13-d3131d2491a8",
+		"name": "CurrencyExchanger",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27850172"
+	},
+	"item": [
+		{
+			"name": "GET /currencies",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "77.239.100.191:8080/currency_exchanger/currencies",
+					"host": [
+						"77.239.100.191"
+					],
+					"port": "8080",
+					"path": [
+						"currency_exchanger",
+						"currencies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /currency/GBP",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "77.239.100.191:8080/currency_exchanger/currency/GBP",
+					"host": [
+						"77.239.100.191"
+					],
+					"port": "8080",
+					"path": [
+						"currency_exchanger",
+						"currency",
+						"GBP"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /currencies",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "VAL",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "V",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "77.239.100.191:8080/currency_exchanger/currencies",
+					"host": [
+						"77.239.100.191"
+					],
+					"port": "8080",
+					"path": [
+						"currency_exchanger",
+						"currencies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /exchangeRates",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "VAL",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "V",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "77.239.100.191:8080/currency_exchanger/exchangeRates",
+					"host": [
+						"77.239.100.191"
+					],
+					"port": "8080",
+					"path": [
+						"currency_exchanger",
+						"exchangeRates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /exchangeRate/USDEUR",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "VAL",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "V",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "77.239.100.191:8080/currency_exchanger/exchangeRate/USDEUR",
+					"host": [
+						"77.239.100.191"
+					],
+					"port": "8080",
+					"path": [
+						"currency_exchanger",
+						"exchangeRate",
+						"USDEUR"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /exchangeRates",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "baseCurrencyCode",
+							"value": "RUB",
+							"type": "text"
+						},
+						{
+							"key": "targetCurrencyCode",
+							"value": "AUD",
+							"type": "text"
+						},
+						{
+							"key": "rate",
+							"value": "2.88",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "77.239.100.191:8080/currency_exchanger/exchangeRates",
+					"host": [
+						"77.239.100.191"
+					],
+					"port": "8080",
+					"path": [
+						"currency_exchanger",
+						"exchangeRates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH /exchangeRate/RUBAUD",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "rate",
+							"value": "50",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "77.239.100.191:8080/currency_exchanger/exchangeRate/RUBAUD?rate=50",
+					"host": [
+						"77.239.100.191"
+					],
+					"port": "8080",
+					"path": [
+						"currency_exchanger",
+						"exchangeRate",
+						"RUBAUD"
+					],
+					"query": [
+						{
+							"key": "rate",
+							"value": "50"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /exchange?from=RUB&to=AUD&amount=12",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "from",
+							"value": "RUB",
+							"type": "text"
+						},
+						{
+							"key": "to",
+							"value": "AUD",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "12",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "77.239.100.191:8080/currency_exchanger/exchange?from=RUB&to=AUD&amount=12",
+					"host": [
+						"77.239.100.191"
+					],
+					"port": "8080",
+					"path": [
+						"currency_exchanger",
+						"exchange"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "RUB"
+						},
+						{
+							"key": "to",
+							"value": "AUD"
+						},
+						{
+							"key": "amount",
+							"value": "12"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
