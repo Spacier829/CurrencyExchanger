@@ -2,6 +2,8 @@
 
 REST-api для обменных курсов валют
 
+Front-end by Sergey Zhykov
+
 ## Содержание
 
 - [Стек](#стек)
